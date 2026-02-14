@@ -4,12 +4,23 @@ const PORT = 7777
 @onready var PlayerScene = preload("res://Player.tscn")
 
 func _ready():
+	var config = ConfigFile.new()
+	var err = config.load("res://config.local.cfg")
+	var mode = "client"
+	var ip = "25.46.104.9"
 	
+	if err == OK:
+		mode = config.get_value("network", "mode", "client")
+		ip = config.get_value("network", "ip", "25.46.104.9")
+		
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
-	start_server() # якшо хост - розкоментувати
+	if mode == "host":
+		start_server()
+	else:
+		connect_to_server(ip)
 	
-	#connect_to_server("25.46.104.9") # якшо клієнт - розкоментувати
+	
 
 # --- HOST ---
 func start_server():
