@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-@export var speed: float = 250.0
+@export var speed: float = 350.0
 
 func _physics_process(delta):
 	if !is_multiplayer_authority():
