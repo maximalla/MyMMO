@@ -4,7 +4,8 @@ const PORT = 7777
 @onready var PlayerScene = preload("res://Player.tscn")
 
 func _ready():
-	#start_server() # якшо хост - розкоментувати
+	start_server() # якшо хост - розкоментувати
+	
 	#connect_to_server("31.43.49.240") # якшо клієнт - розкоментувати
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
