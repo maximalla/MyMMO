@@ -42,3 +42,8 @@ func spawn_player(id):
 func _on_peer_disconnected(id):
 	if has_node(str(id)):
 		get_node(str(id)).queue_free()
+
+func _process(delta):
+	if multiplayer.multiplayer_peer:
+		var status = multiplayer.multiplayer_peer.get_connection_status()
+		print("Connection status:", status)
