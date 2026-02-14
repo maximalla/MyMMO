@@ -11,8 +11,13 @@ config_version=5
 [application]
 
 config/name="MyMMO"
+run/main_scene="uid://i3faxnjc0mpe"
 config/features=PackedStringArray("4.6", "Mobile")
 "<<<<<<<HEAD[editor_plugins]enabled"=PackedStringArray("res://addons/GitGodot/plugin.cfg")
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/GitGodot/plugin.cfg")
 
 [physics]
 

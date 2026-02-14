@@ -4,11 +4,12 @@ const PORT = 7777
 @onready var PlayerScene = preload("res://Player.tscn")
 
 func _ready():
-	start_server() # якшо хост - розкоментувати
 	
-	#connect_to_server("31.43.49.240") # якшо клієнт - розкоментувати
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
+	start_server() # якшо хост - розкоментувати
+	
+	#connect_to_server("25.46.104.9") # якшо клієнт - розкоментувати
 
 # --- HOST ---
 func start_server():
@@ -30,8 +31,9 @@ func connect_to_server(ip):
 
 func _on_peer_connected(id):
 	print("Підключився гравець: ", id)
-	spawn_player(id)
+	spawn_player.rpc(id)
 
+@rpc("any_peer", "call_local")
 func spawn_player(id):
 	var player = PlayerScene.instantiate()
 	player.name = str(id)
@@ -46,4 +48,4 @@ func _on_peer_disconnected(id):
 func _process(delta):
 	if multiplayer.multiplayer_peer:
 		var status = multiplayer.multiplayer_peer.get_connection_status()
-		print("Connection status:", status)
+		#print("Connection status:", status) # якшо 0 - не запустилося 1 - не підключилося, 2 - ок
