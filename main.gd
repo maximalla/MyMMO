@@ -15,11 +15,11 @@ func _ready():
 func start_server():
 	var peer = ENetMultiplayerPeer.new()
 	peer.create_server(PORT)
-	multiplayer.multiplayer_peer = peer
-	
+	multiplayer.multiplayer_peer = peer 
 	print("Сервер запущено")
 	
-	spawn_player(multiplayer.get_unique_id())
+	# Сервер створює себе через RPC
+	spawn_player.rpc(multiplayer.get_unique_id())
 
 # --- CLIENT ---
 func connect_to_server(ip):
@@ -35,6 +35,9 @@ func _on_peer_connected(id):
 
 @rpc("any_peer", "call_local")
 func spawn_player(id):
+	if has_node(str(id)):
+		return   # захист від дублювання
+
 	var player = PlayerScene.instantiate()
 	player.name = str(id)
 	add_child(player)
