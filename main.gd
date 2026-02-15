@@ -42,16 +42,47 @@ func connect_to_server(ip):
 
 func _on_peer_connected(id):
 	print("Підключився гравець: ", id)
-	spawn_player(id)
+
+	if multiplayer.is_server():
+		# Створюємо нового гравця
+		spawn_player(id)
+
+		# І повідомляємо нового клієнта про всіх існуючих
+		for peer_id in multiplayer.get_peers():
+			rpc_id(id, "spawn_player_remote", peer_id)
+
+		# Також повідомляємо про сервер
+		rpc_id(id, "spawn_player_remote", multiplayer.get_unique_id())
+
 
 func spawn_player(id):
 	if not multiplayer.is_server():
+		return
+
+	if has_node(str(id)):
 		return
 
 	var player = PlayerScene.instantiate()
 	player.name = str(id)
 	add_child(player)
 	player.global_position = Vector2(randi()%500, randi()%400)
+	player.set_multiplayer_authority(id)
+
+	rpc("spawn_player_remote", id)
+
+
+@rpc("any_peer")
+func spawn_player_remote(id):
+	if multiplayer.is_server():
+		return
+
+	if has_node(str(id)):
+		return
+
+	var player = PlayerScene.instantiate()
+	player.name = str(id)
+	add_child(player)
+	player.global_position = Vector2.ZERO
 	player.set_multiplayer_authority(id)
 
 
