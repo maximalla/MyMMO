@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 @export var speed: float = 300.0
 
-var input_dir: Vector2 = Vector2.ZERO
+var input_dir: Vector2 = Vector2.ZERO	
 
 func _physics_process(delta):
 
@@ -25,7 +25,7 @@ func _physics_process(delta):
 
 		rpc("sync_position", global_position)
 
-@rpc("any_peer")
+@rpc("any_peer", "unreliable")
 func receive_input(dir: Vector2):
 	if multiplayer.is_server():
 		input_dir = dir
