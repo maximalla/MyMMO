@@ -30,7 +30,7 @@ func start_server():
 	print("Сервер запущено")
 	
 	# Сервер створює себе через RPC
-	spawn_player.rpc(multiplayer.get_unique_id())
+	spawn_player(multiplayer.get_unique_id())
 
 # --- CLIENT ---
 func connect_to_server(ip):
@@ -42,18 +42,18 @@ func connect_to_server(ip):
 
 func _on_peer_connected(id):
 	print("Підключився гравець: ", id)
-	spawn_player.rpc(id)
+	spawn_player(id)
 
-@rpc("any_peer", "call_local")
 func spawn_player(id):
-	if has_node(str(id)):
-		return   # захист від дублювання
+	if not multiplayer.is_server():
+		return
 
 	var player = PlayerScene.instantiate()
 	player.name = str(id)
 	add_child(player)
 	player.global_position = Vector2(randi()%500, randi()%400)
 	player.set_multiplayer_authority(id)
+
 
 func _on_peer_disconnected(id):
 	if has_node(str(id)):
